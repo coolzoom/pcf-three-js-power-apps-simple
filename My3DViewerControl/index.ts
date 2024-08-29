@@ -43,7 +43,7 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
         // Add a camera
         this._camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
 
-        this._camera.position.z = 2;
+        this._camera.position.z = 10;
 
         // Create a cube
         // const geometry = new THREE.BoxGeometry();
@@ -112,9 +112,9 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
         // Add a directional light
         const light = new THREE.DirectionalLight(0xffffff, 1);
         light.position.set(5, 5, 5);
-        light.castShadow = true; // Enable shadow casting by the light
-        light.shadow.mapSize.width = 1024;
-        light.shadow.mapSize.height = 1024;
+        // light.castShadow = true; // Enable shadow casting by the light
+        // light.shadow.mapSize.width = 1024;
+        // light.shadow.mapSize.height = 1024;
         this._scene.add(light);
 
         // Initialize raycaster and mouse vector
