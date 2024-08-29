@@ -71,7 +71,7 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
         }
 
         // 示例字符串
-        const layerData = "Layer1,typeA,0.1|Layer2,typeB,0.2|Layer3,typeC,0.15";
+        const layerData = "Layer1,typeA,0.1|Layer2,typeB,0.2|Layer3,typeC,0.15|Layer4,typeA,0.1|Layer5,typeB,0.2|Layer6,typeC,0.15";
         // 将字符串按 | 分割成数组
         const layersInfo = layerData.split('|');
 
@@ -79,8 +79,8 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
         // 加载字体
         const fontLoader = new FontLoader();
         fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
-            let pospointer = 0;
-            layersInfo.forEach((layerStr, index) => {
+            let pospointer = 2;
+            layersInfo.forEach((layerStr, insdex) => {
                 // 将每个元素按逗号分割
                 const [layerName, layerType, layerThk] = layerStr.split(',');
 
@@ -116,7 +116,7 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
                 this._scene.add(line);
 
                 // 添加文本
-                const textGeometry = new TextGeometry(`layer ${layerName} thickness ${layerThickness}`, {
+                const textGeometry = new TextGeometry(`layer ${layerName} thickness ${parseFloat(layerThk)}`, {
                     font: font,
                     size: 0.06,
                     height: 0.02,
