@@ -70,11 +70,21 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
             return color;
         }
 
+        // 示例字符串
+        const layerData = "Layer1,typeA,0.1|Layer2,typeB,0.2|Layer3,typeC,0.15";
+        // 将字符串按 | 分割成数组
+        const layersInfo = layerData.split('|');
+
+
         // 加载字体
         const fontLoader = new FontLoader();
         fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
-            for (let i = 0; i < layers; i++) {
-                const geometry = new THREE.BoxGeometry(layerWidth, layerThickness, layerHeight);
+            let pospointer = 0;
+            layersInfo.forEach((layerStr, index) => {
+                // 将每个元素按逗号分割
+                const [layerName, layerType, layerThk] = layerStr.split(',');
+
+                const geometry = new THREE.BoxGeometry(layerWidth, parseFloat(layerThk), layerHeight);
                 // const material = new THREE.MeshPhongMaterial({ color: getRandomColor(), opacity: 1, transparent: true });
                 const material = new THREE.MeshStandardMaterial({ 
                     color: getRandomColor(), 
@@ -85,37 +95,89 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
                 });
 
                 const pcbLayer = new THREE.Mesh(geometry, material);
-                pcbLayer.position.y = i * layerThickness; // 设置每层的位置
+                pcbLayer.position.y = pospointer; // 设置每层的位置
                 this._scene.add(pcbLayer);
 
                  // 创建边框
                  const edges = new THREE.EdgesGeometry(geometry);
                  const edgeMaterial = new THREE.LineBasicMaterial({ color: 0x000000 }); // 黑色边框
                  const edgeLines = new THREE.LineSegments(edges, edgeMaterial);
-                 edgeLines.position.y = i * layerThickness; // 设置边框位置
+                 edgeLines.position.y = pospointer; // 设置每层的位置
                  this._scene.add(edgeLines);
 
                 // 添加引线
                 // 添加横线指向每层中心
                 const points = [];
-                points.push(new THREE.Vector3(layerWidth / 2, i * layerThickness, layerHeight / 2)); // 起点
-                points.push(new THREE.Vector3(layerWidth, i * layerThickness, layerHeight / 2)); // 终点
+                points.push(new THREE.Vector3(layerWidth / 2, pospointer, layerHeight / 2)); // 起点
+                points.push(new THREE.Vector3(layerWidth, pospointer, layerHeight / 2)); // 终点
                 const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
                 const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
                 const line = new THREE.Line(lineGeometry, lineMaterial);
                 this._scene.add(line);
 
                 // 添加文本
-                const textGeometry = new TextGeometry(`layer ${i + 1} thickness ${layerThickness}`, {
+                const textGeometry = new TextGeometry(`layer ${layerName} thickness ${layerThickness}`, {
                     font: font,
                     size: 0.06,
                     height: 0.02,
                 });
                 const textMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
                 const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-                textMesh.position.set(layerWidth / 2 + 0.7, i * layerThickness, layerHeight / 2);
+                textMesh.position.set(layerWidth / 2 + 0.7, pospointer, layerHeight / 2);
                 this._scene.add(textMesh);
+                
+                pospointer += parseFloat(layerThk);
+            });
+
+            // test
+            const istest = false;
+            if(istest)
+            {
+                for (let i = 0; i < layers; i++) {
+                    const geometry = new THREE.BoxGeometry(layerWidth, layerThickness, layerHeight);
+                    // const material = new THREE.MeshPhongMaterial({ color: getRandomColor(), opacity: 1, transparent: true });
+                    const material = new THREE.MeshStandardMaterial({ 
+                        color: getRandomColor(), 
+                        metalness: 0.8, // 设置金属度
+                        roughness: 0.1, // 设置粗糙度
+                        opacity: 1, 
+                        transparent: true 
+                    });
+    
+                    const pcbLayer = new THREE.Mesh(geometry, material);
+                    pcbLayer.position.y = i * layerThickness; // 设置每层的位置
+                    this._scene.add(pcbLayer);
+    
+                     // 创建边框
+                     const edges = new THREE.EdgesGeometry(geometry);
+                     const edgeMaterial = new THREE.LineBasicMaterial({ color: 0x000000 }); // 黑色边框
+                     const edgeLines = new THREE.LineSegments(edges, edgeMaterial);
+                     edgeLines.position.y = i * layerThickness; // 设置边框位置
+                     this._scene.add(edgeLines);
+    
+                    // 添加引线
+                    // 添加横线指向每层中心
+                    const points = [];
+                    points.push(new THREE.Vector3(layerWidth / 2, i * layerThickness, layerHeight / 2)); // 起点
+                    points.push(new THREE.Vector3(layerWidth, i * layerThickness, layerHeight / 2)); // 终点
+                    const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
+                    const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
+                    const line = new THREE.Line(lineGeometry, lineMaterial);
+                    this._scene.add(line);
+    
+                    // 添加文本
+                    const textGeometry = new TextGeometry(`layer ${i + 1} thickness ${layerThickness}`, {
+                        font: font,
+                        size: 0.06,
+                        height: 0.02,
+                    });
+                    const textMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+                    const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+                    textMesh.position.set(layerWidth / 2 + 0.7, i * layerThickness, layerHeight / 2);
+                    this._scene.add(textMesh);
+                }
             }
+
         });
 
         // Create a plane to receive the shadow
