@@ -53,7 +53,7 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
         // this._scene.add(this._cube);
 
          // 创建 PCB 板层
-         const layers = 10;
+         const layers = 50;
          const layerThickness = 0.1;
          const layerWidth = 5;
          const layerHeight = 5;
@@ -72,7 +72,7 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
         fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
             for (let i = 0; i < layers; i++) {
                 const geometry = new THREE.BoxGeometry(layerWidth, layerThickness, layerHeight);
-                const material = new THREE.MeshPhongMaterial({ color: getRandomColor(), opacity: 0.8, transparent: true });
+                const material = new THREE.MeshPhongMaterial({ color: getRandomColor(), opacity: 1, transparent: true });
                 const pcbLayer = new THREE.Mesh(geometry, material);
                 pcbLayer.position.y = i * layerThickness; // 设置每层的位置
                 this._scene.add(pcbLayer);
@@ -88,9 +88,9 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
                 this._scene.add(line);
 
                 // 添加文本
-                const textGeometry = new TextGeometry(`层 ${i + 1}\n厚度 ${layerThickness}`, {
+                const textGeometry = new TextGeometry(`layer ${i + 1} thickness ${layerThickness}`, {
                     font: font,
-                    size: 0.2,
+                    size: 0.06,
                     height: 0.02,
                 });
                 const textMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
