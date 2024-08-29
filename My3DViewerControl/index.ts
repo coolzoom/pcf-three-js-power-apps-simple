@@ -22,6 +22,143 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
         const regex = /[|,]/; // 正则表达式匹配逗号或竖线
         return regex.test(input); // 返回是否匹配
     }
+
+    private initscene(): void {
+         // if(this._renderer.domElement != null)
+        // {
+        //     this._container.removeChild(this._renderer.domElement);
+        // }
+         // Initialize Three.js renderer
+         this._renderer = new THREE.WebGLRenderer({ antialias: true });
+         this._renderer.setClearColor(0xffffff); // Set background color to white - can set to different color to see the edges of the render window.
+         this._renderer.shadowMap.enabled = true; // Enable shadow maps
+         this._container.appendChild(this._renderer.domElement);
+ 
+         
+         // 访问 sampleProperty
+         const sampleValue = this._context.parameters.stackupstring.raw;
+         console.log("Sample Property Value: ", sampleValue);
+ 
+         // Create a scene
+         this._scene = new THREE.Scene();
+ 
+         // Add a camera
+         this._camera = new THREE.PerspectiveCamera(75, this._container.clientWidth / this._container.clientHeight, 0.1, 1000);
+ 
+         this._camera.position.z = 10;
+ 
+         // Create a cube
+         // const geometry = new THREE.BoxGeometry();
+         // const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 }); // Use MeshStandardMaterial for better lighting
+         // this._cube = new THREE.Mesh(geometry, material);
+         // this._cube.castShadow = true; // Enable casting shadows
+         // this._scene.add(this._cube);
+ 
+    }
+
+    private finalizescene(): void {
+
+         // Create a plane to receive the shadow
+         const planeGeometry = new THREE.PlaneGeometry(500, 500);
+         const planeMaterial = new THREE.ShadowMaterial({ opacity: 0.5 });
+         const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+         plane.rotation.x = -Math.PI / 2;
+         plane.position.y = -1;
+         plane.receiveShadow = true; // Enable receiving shadows
+         this._scene.add(plane);
+ 
+ 
+         // 添加环境光
+         const ambientLight = new THREE.AmbientLight(0xffffff, 2);
+         this._scene.add(ambientLight);
+         
+         // Add a directional light
+         const light = new THREE.DirectionalLight(0xffffff, 10);
+         light.position.set(0, 0, 10).normalize(); // 增加光源的强度和位置
+         // light.castShadow = true; // Enable shadow casting by the light
+         // light.shadow.mapSize.width = 1024;
+         // light.shadow.mapSize.height = 1024;
+         this._scene.add(light);
+ 
+         // Initialize raycaster and mouse vector
+         this._raycaster = new THREE.Raycaster();
+         this._mouse = new THREE.Vector2();
+ 
+         // Add event listener for mouse click
+         this._container.addEventListener('click', this.onMouseClick.bind(this), false);
+ 
+         // 鼠标控制
+         const controls = new OrbitControls(this._camera, this._renderer.domElement);
+ 
+         // How far you can orbit vertically, upper and lower limits.
+         controls.minPolarAngle = 0;
+         controls.maxPolarAngle = Math.PI;
+ 
+         // How far you can dolly in and out ( PerspectiveCamera only )
+         controls.minDistance = 0;
+         controls.maxDistance = Infinity;
+ 
+         controls.enablePan = true; // Set to false to disable panning (ie vertical and horizontal translations)
+ 
+         controls.enableDamping = true; // Set to false to disable damping (ie inertia)
+         controls.dampingFactor = 0.25;
+ 
+         const animate = () => {
+             requestAnimationFrame(animate);
+             // this._cube.rotation.x += 0.01;
+             // this._cube.rotation.y += 0.01;
+             controls.update(); // 更新控制器
+             this._renderer.render(this._scene, this._camera);
+         };
+         animate();
+ 
+         //  // 场景、相机和渲染器
+         //  var scene = new THREE.Scene();
+         //  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+         //  const renderer = new THREE.WebGLRenderer();
+         //  renderer.setSize(window.innerWidth, window.innerHeight);
+         //  document.body.appendChild(renderer.domElement);
+  
+         //  // 添加光源
+         //  const light = new THREE.DirectionalLight(0xffffff, 1);
+         //  light.position.set(5, 5, 5).normalize();
+         //  scene.add(light);
+  
+         //  // 创建 PCB 板层
+         //  const layers = 10;
+         //  const layerThickness = 0.1;
+         //  const layerWidth = 5;
+         //  const layerHeight = 5;
+  
+         //  for (let i = 0; i < layers; i++) {
+         //      const geometry = new THREE.BoxGeometry(layerWidth, layerThickness, layerHeight);
+         //      const material = new THREE.MeshPhongMaterial({ color: 0x00ff00, opacity: 0.8, transparent: true });
+         //      const pcbLayer = new THREE.Mesh(geometry, material);
+         //      pcbLayer.position.y = i * layerThickness; // 设置每层的位置
+         //      scene.add(pcbLayer);
+         //  }
+  
+         //  camera.position.z = 15;
+  
+         //  // 鼠标控制
+         //  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  
+         //  // 渲染循环
+         //  function animate() {
+         //      requestAnimationFrame(animate);
+         //      controls.update(); // 更新控制器
+         //      renderer.render(scene, camera);
+         //  }
+         //  animate();
+  
+         //  // 处理窗口调整
+         //  window.addEventListener('resize', () => {
+         //      camera.aspect = window.innerWidth / window.innerHeight;
+         //      camera.updateProjectionMatrix();
+         //      renderer.setSize(window.innerWidth, window.innerHeight);
+         //  });
+    }
+
     private drawpcb(): void {
                // 创建 PCB 板层
                const layers = 50;
@@ -159,141 +296,6 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
 
     }
 
-    private drawthreejs(): void {
-        // if(this._renderer.domElement != null)
-        // {
-        //     this._container.removeChild(this._renderer.domElement);
-        // }
-         // Initialize Three.js renderer
-         this._renderer = new THREE.WebGLRenderer({ antialias: true });
-         this._renderer.setClearColor(0xffffff); // Set background color to white - can set to different color to see the edges of the render window.
-         this._renderer.shadowMap.enabled = true; // Enable shadow maps
-         this._container.appendChild(this._renderer.domElement);
- 
-         
-         // 访问 sampleProperty
-         const sampleValue = this._context.parameters.stackupstring.raw;
-         console.log("Sample Property Value: ", sampleValue);
- 
-         // Create a scene
-         this._scene = new THREE.Scene();
- 
-         // Add a camera
-         this._camera = new THREE.PerspectiveCamera(75, this._container.clientWidth / this._container.clientHeight, 0.1, 1000);
- 
-         this._camera.position.z = 10;
- 
-         // Create a cube
-         // const geometry = new THREE.BoxGeometry();
-         // const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 }); // Use MeshStandardMaterial for better lighting
-         // this._cube = new THREE.Mesh(geometry, material);
-         // this._cube.castShadow = true; // Enable casting shadows
-         // this._scene.add(this._cube);
- 
-         //drawpcb
-         this.drawpcb();
- 
-         // Create a plane to receive the shadow
-         const planeGeometry = new THREE.PlaneGeometry(500, 500);
-         const planeMaterial = new THREE.ShadowMaterial({ opacity: 0.5 });
-         const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-         plane.rotation.x = -Math.PI / 2;
-         plane.position.y = -1;
-         plane.receiveShadow = true; // Enable receiving shadows
-         this._scene.add(plane);
- 
- 
-         // 添加环境光
-         const ambientLight = new THREE.AmbientLight(0xffffff, 2);
-         this._scene.add(ambientLight);
-         
-         // Add a directional light
-         const light = new THREE.DirectionalLight(0xffffff, 10);
-         light.position.set(0, 0, 10).normalize(); // 增加光源的强度和位置
-         // light.castShadow = true; // Enable shadow casting by the light
-         // light.shadow.mapSize.width = 1024;
-         // light.shadow.mapSize.height = 1024;
-         this._scene.add(light);
- 
-         // Initialize raycaster and mouse vector
-         this._raycaster = new THREE.Raycaster();
-         this._mouse = new THREE.Vector2();
- 
-         // Add event listener for mouse click
-         this._container.addEventListener('click', this.onMouseClick.bind(this), false);
- 
-         // 鼠标控制
-         const controls = new OrbitControls(this._camera, this._renderer.domElement);
- 
-         // How far you can orbit vertically, upper and lower limits.
-         controls.minPolarAngle = 0;
-         controls.maxPolarAngle = Math.PI;
- 
-         // How far you can dolly in and out ( PerspectiveCamera only )
-         controls.minDistance = 0;
-         controls.maxDistance = Infinity;
- 
-         controls.enablePan = true; // Set to false to disable panning (ie vertical and horizontal translations)
- 
-         controls.enableDamping = true; // Set to false to disable damping (ie inertia)
-         controls.dampingFactor = 0.25;
- 
-         const animate = () => {
-             requestAnimationFrame(animate);
-             // this._cube.rotation.x += 0.01;
-             // this._cube.rotation.y += 0.01;
-             controls.update(); // 更新控制器
-             this._renderer.render(this._scene, this._camera);
-         };
-         animate();
- 
-         //  // 场景、相机和渲染器
-         //  var scene = new THREE.Scene();
-         //  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-         //  const renderer = new THREE.WebGLRenderer();
-         //  renderer.setSize(window.innerWidth, window.innerHeight);
-         //  document.body.appendChild(renderer.domElement);
-  
-         //  // 添加光源
-         //  const light = new THREE.DirectionalLight(0xffffff, 1);
-         //  light.position.set(5, 5, 5).normalize();
-         //  scene.add(light);
-  
-         //  // 创建 PCB 板层
-         //  const layers = 10;
-         //  const layerThickness = 0.1;
-         //  const layerWidth = 5;
-         //  const layerHeight = 5;
-  
-         //  for (let i = 0; i < layers; i++) {
-         //      const geometry = new THREE.BoxGeometry(layerWidth, layerThickness, layerHeight);
-         //      const material = new THREE.MeshPhongMaterial({ color: 0x00ff00, opacity: 0.8, transparent: true });
-         //      const pcbLayer = new THREE.Mesh(geometry, material);
-         //      pcbLayer.position.y = i * layerThickness; // 设置每层的位置
-         //      scene.add(pcbLayer);
-         //  }
-  
-         //  camera.position.z = 15;
-  
-         //  // 鼠标控制
-         //  const controls = new THREE.OrbitControls(camera, renderer.domElement);
-  
-         //  // 渲染循环
-         //  function animate() {
-         //      requestAnimationFrame(animate);
-         //      controls.update(); // 更新控制器
-         //      renderer.render(scene, camera);
-         //  }
-         //  animate();
-  
-         //  // 处理窗口调整
-         //  window.addEventListener('resize', () => {
-         //      camera.aspect = window.innerWidth / window.innerHeight;
-         //      camera.updateProjectionMatrix();
-         //      renderer.setSize(window.innerWidth, window.innerHeight);
-         //  });
-    }
-
     public init(
         context: ComponentFramework.Context<IInputs>, 
         notifyOutputChanged: () => void, 
@@ -305,8 +307,15 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
         // Track window size - important for code inside updateView.
         this._context.mode.trackContainerResize(true);
         
-        //draw threejs
-        this.drawthreejs();
+        //init scene
+        this.initscene();
+
+         //drawpcb
+         this.drawpcb();
+
+         //finalize scene
+         this.finalizescene();
+ 
     }
 
     
@@ -341,23 +350,24 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
         //draw threejs
         //this.drawthreejs(); //todo, this would adding duplicate threejs object, need fix
         
-        // 清空层和标签的函数
-        const clearLayersAndLabels = () => {
-            this._scene.children.forEach(child => {
-                if (child instanceof THREE.Mesh) {
-                    // 检查是否是层或文本
-                    if (child.geometry.type === "BoxGeometry" || 
-                        child.geometry.type === "TextGeometry" || 
-                        child.geometry.type === "LineGeometry" || 
-                        child.geometry.type === "Line") {
-                        this._scene.remove(child);
-                    }
-                }
-            });
+        // 清空场景中的所有对象
+        const clearScene = () => {
+            while (this._scene.children.length > 0) {
+                this._scene.remove(this._scene.children[0]); // 移除第一个子对象
+            }
         }
+
+        // 使用示例
+        clearScene(); // 调用此函数以清空场景
         //重新绘制
+        //init scene
+        //this.initscene();
+
         //drawpcb
         this.drawpcb();
+
+        //finalize scene
+        this.finalizescene();
 
 
         // Change the render size depending on the parent container (the container that is inside the Canvas App)
