@@ -36,6 +36,9 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
         container.appendChild(this._renderer.domElement);
 
         
+        // 访问 sampleProperty
+        const sampleValue = context.parameters.sampleProperty.raw;
+        console.log("Sample Property Value: ", sampleValue);
 
         // Create a scene
         this._scene = new THREE.Scene();
@@ -80,7 +83,7 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
                 // 添加引线
                 // 添加横线指向每层中心
                 const points = [];
-                points.push(new THREE.Vector3(0, i * layerThickness, layerHeight / 2)); // 起点
+                points.push(new THREE.Vector3(layerWidth / 2, i * layerThickness, layerHeight / 2)); // 起点
                 points.push(new THREE.Vector3(layerWidth, i * layerThickness, layerHeight / 2)); // 终点
                 const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
                 const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
