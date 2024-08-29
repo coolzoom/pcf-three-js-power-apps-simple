@@ -41,7 +41,7 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
               // 示例字符串
               let layerData = "Layer1,typeA,0.1|Layer2,typeB,0.15|Layer3,typeC,0.15|Layer4,typeA,0.1|Layer5,typeB,0.2|Layer6,typeC,0.15";
 
-              const sampleValue: string | null = this._context.parameters.sampleProperty.raw;
+              const sampleValue: string | null = this._context.parameters.stackupstring.raw;
 
               if (sampleValue !== null) {
                 if(this.containsCommaOrPipe(sampleValue))
@@ -172,7 +172,7 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
  
          
          // 访问 sampleProperty
-         const sampleValue = this._context.parameters.sampleProperty.raw;
+         const sampleValue = this._context.parameters.stackupstring.raw;
          console.log("Sample Property Value: ", sampleValue);
  
          // Create a scene
