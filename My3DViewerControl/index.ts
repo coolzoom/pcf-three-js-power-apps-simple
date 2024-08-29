@@ -88,6 +88,13 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
                 pcbLayer.position.y = i * layerThickness; // 设置每层的位置
                 this._scene.add(pcbLayer);
 
+                 // 创建边框
+                 const edges = new THREE.EdgesGeometry(geometry);
+                 const edgeMaterial = new THREE.LineBasicMaterial({ color: 0x000000 }); // 黑色边框
+                 const edgeLines = new THREE.LineSegments(edges, edgeMaterial);
+                 edgeLines.position.y = i * layerThickness; // 设置边框位置
+                 this._scene.add(edgeLines);
+
                 // 添加引线
                 // 添加横线指向每层中心
                 const points = [];
