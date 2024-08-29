@@ -1,5 +1,8 @@
 import { IInputs, IOutputs } from "./generated/ManifestTypes";
 import * as THREE from "three";
+import { OrbitControls } from '@three-ts/orbit-controls';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 
 export class My3DViewerControl implements ComponentFramework.StandardControl<IInputs, IOutputs> {
     private _container: HTMLDivElement;
@@ -43,11 +46,59 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
         this._camera.position.z = 2;
 
         // Create a cube
-        const geometry = new THREE.BoxGeometry();
-        const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 }); // Use MeshStandardMaterial for better lighting
-        this._cube = new THREE.Mesh(geometry, material);
-        this._cube.castShadow = true; // Enable casting shadows
-        this._scene.add(this._cube);
+        // const geometry = new THREE.BoxGeometry();
+        // const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 }); // Use MeshStandardMaterial for better lighting
+        // this._cube = new THREE.Mesh(geometry, material);
+        // this._cube.castShadow = true; // Enable casting shadows
+        // this._scene.add(this._cube);
+
+         // 创建 PCB 板层
+         const layers = 10;
+         const layerThickness = 0.1;
+         const layerWidth = 5;
+         const layerHeight = 5;
+
+         function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        // 加载字体
+        const fontLoader = new FontLoader();
+        fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
+            for (let i = 0; i < layers; i++) {
+                const geometry = new THREE.BoxGeometry(layerWidth, layerThickness, layerHeight);
+                const material = new THREE.MeshPhongMaterial({ color: getRandomColor(), opacity: 0.8, transparent: true });
+                const pcbLayer = new THREE.Mesh(geometry, material);
+                pcbLayer.position.y = i * layerThickness; // 设置每层的位置
+                this._scene.add(pcbLayer);
+
+                // 添加引线
+                // 添加横线指向每层中心
+                const points = [];
+                points.push(new THREE.Vector3(0, i * layerThickness, layerHeight / 2)); // 起点
+                points.push(new THREE.Vector3(layerWidth, i * layerThickness, layerHeight / 2)); // 终点
+                const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
+                const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
+                const line = new THREE.Line(lineGeometry, lineMaterial);
+                this._scene.add(line);
+
+                // 添加文本
+                const textGeometry = new TextGeometry(`层 ${i + 1}\n厚度 ${layerThickness}`, {
+                    font: font,
+                    size: 0.2,
+                    height: 0.02,
+                });
+                const textMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+                const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+                textMesh.position.set(layerWidth / 2 + 0.7, i * layerThickness, layerHeight / 2);
+                this._scene.add(textMesh);
+            }
+        });
 
         // Create a plane to receive the shadow
         const planeGeometry = new THREE.PlaneGeometry(500, 500);
@@ -73,14 +124,76 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
         // Add event listener for mouse click
         container.addEventListener('click', this.onMouseClick.bind(this), false);
 
-        // Render the scene
+        // 鼠标控制
+        const controls = new OrbitControls(this._camera, this._renderer.domElement);
+
+        // How far you can orbit vertically, upper and lower limits.
+        controls.minPolarAngle = 0;
+        controls.maxPolarAngle = Math.PI;
+
+        // How far you can dolly in and out ( PerspectiveCamera only )
+        controls.minDistance = 0;
+        controls.maxDistance = Infinity;
+
+        controls.enablePan = true; // Set to false to disable panning (ie vertical and horizontal translations)
+
+        controls.enableDamping = true; // Set to false to disable damping (ie inertia)
+        controls.dampingFactor = 0.25;
+
         const animate = () => {
             requestAnimationFrame(animate);
-            this._cube.rotation.x += 0.01;
-            this._cube.rotation.y += 0.01;
+            // this._cube.rotation.x += 0.01;
+            // this._cube.rotation.y += 0.01;
+            controls.update(); // 更新控制器
             this._renderer.render(this._scene, this._camera);
         };
         animate();
+
+        //  // 场景、相机和渲染器
+        //  var scene = new THREE.Scene();
+        //  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        //  const renderer = new THREE.WebGLRenderer();
+        //  renderer.setSize(window.innerWidth, window.innerHeight);
+        //  document.body.appendChild(renderer.domElement);
+ 
+        //  // 添加光源
+        //  const light = new THREE.DirectionalLight(0xffffff, 1);
+        //  light.position.set(5, 5, 5).normalize();
+        //  scene.add(light);
+ 
+        //  // 创建 PCB 板层
+        //  const layers = 10;
+        //  const layerThickness = 0.1;
+        //  const layerWidth = 5;
+        //  const layerHeight = 5;
+ 
+        //  for (let i = 0; i < layers; i++) {
+        //      const geometry = new THREE.BoxGeometry(layerWidth, layerThickness, layerHeight);
+        //      const material = new THREE.MeshPhongMaterial({ color: 0x00ff00, opacity: 0.8, transparent: true });
+        //      const pcbLayer = new THREE.Mesh(geometry, material);
+        //      pcbLayer.position.y = i * layerThickness; // 设置每层的位置
+        //      scene.add(pcbLayer);
+        //  }
+ 
+        //  camera.position.z = 15;
+ 
+        //  // 鼠标控制
+        //  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+ 
+        //  // 渲染循环
+        //  function animate() {
+        //      requestAnimationFrame(animate);
+        //      controls.update(); // 更新控制器
+        //      renderer.render(scene, camera);
+        //  }
+        //  animate();
+ 
+        //  // 处理窗口调整
+        //  window.addEventListener('resize', () => {
+        //      camera.aspect = window.innerWidth / window.innerHeight;
+        //      camera.updateProjectionMatrix();
+        //      renderer.setSize(window.innerWidth, window.innerHeight);
+        //  });
     }
 
     
