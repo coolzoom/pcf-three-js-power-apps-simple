@@ -71,7 +71,7 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
         }
 
         // 示例字符串
-        const layerData = "Layer1,typeA,0.1|Layer2,typeB,0.2|Layer3,typeC,0.15|Layer4,typeA,0.1|Layer5,typeB,0.2|Layer6,typeC,0.15";
+        const layerData = "Layer1,typeA,0.1|Layer2,typeB,0.15|Layer3,typeC,0.15|Layer4,typeA,0.1|Layer5,typeB,0.2|Layer6,typeC,0.15";
         // 将字符串按 | 分割成数组
         const layersInfo = layerData.split('|');
 
@@ -126,7 +126,7 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
                 textMesh.position.set(layerWidth / 2 + 0.7, pospointer, layerHeight / 2);
                 this._scene.add(textMesh);
                 
-                pospointer += parseFloat(layerThk);
+                pospointer -= parseFloat(layerThk);
             });
 
             // test
