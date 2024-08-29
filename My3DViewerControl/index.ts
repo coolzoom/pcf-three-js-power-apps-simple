@@ -78,7 +78,7 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
                 // const material = new THREE.MeshPhongMaterial({ color: getRandomColor(), opacity: 1, transparent: true });
                 const material = new THREE.MeshStandardMaterial({ 
                     color: getRandomColor(), 
-                    metalness: 0.5, // 设置金属度
+                    metalness: 0.8, // 设置金属度
                     roughness: 0.1, // 设置粗糙度
                     opacity: 1, 
                     transparent: true 
@@ -120,9 +120,14 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
         plane.receiveShadow = true; // Enable receiving shadows
         this._scene.add(plane);
 
+
+        // 添加环境光
+        const ambientLight = new THREE.AmbientLight(0xffffff, 2);
+        this._scene.add(ambientLight);
+        
         // Add a directional light
-        const light = new THREE.DirectionalLight(0xffffff, 1);
-        light.position.set(5, 5, 5);
+        const light = new THREE.DirectionalLight(0xffffff, 10);
+        light.position.set(10, 10, 10).normalize(); // 增加光源的强度和位置
         // light.castShadow = true; // Enable shadow casting by the light
         // light.shadow.mapSize.width = 1024;
         // light.shadow.mapSize.height = 1024;
