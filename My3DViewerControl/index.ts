@@ -75,7 +75,15 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
         fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
             for (let i = 0; i < layers; i++) {
                 const geometry = new THREE.BoxGeometry(layerWidth, layerThickness, layerHeight);
-                const material = new THREE.MeshPhongMaterial({ color: getRandomColor(), opacity: 1, transparent: true });
+                // const material = new THREE.MeshPhongMaterial({ color: getRandomColor(), opacity: 1, transparent: true });
+                const material = new THREE.MeshStandardMaterial({ 
+                    color: getRandomColor(), 
+                    metalness: 0.5, // 设置金属度
+                    roughness: 0.1, // 设置粗糙度
+                    opacity: 1, 
+                    transparent: true 
+                });
+
                 const pcbLayer = new THREE.Mesh(geometry, material);
                 pcbLayer.position.y = i * layerThickness; // 设置每层的位置
                 this._scene.add(pcbLayer);
