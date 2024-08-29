@@ -134,7 +134,7 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
         
         // Add a directional light
         const light = new THREE.DirectionalLight(0xffffff, 10);
-        light.position.set(10, 10, 10).normalize(); // 增加光源的强度和位置
+        light.position.set(0, 0, 10).normalize(); // 增加光源的强度和位置
         // light.castShadow = true; // Enable shadow casting by the light
         // light.shadow.mapSize.width = 1024;
         // light.shadow.mapSize.height = 1024;
