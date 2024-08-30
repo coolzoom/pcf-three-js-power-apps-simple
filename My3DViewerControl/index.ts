@@ -45,7 +45,9 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
          // Add a camera
          this._camera = new THREE.PerspectiveCamera(75, this._container.clientWidth / this._container.clientHeight, 0.1, 1000);
  
-         this._camera.position.z = 10;
+         this._camera.position.x = 3;
+         this._camera.position.y = 3;
+         this._camera.position.z = 8;
  
          // Create a cube
          // const geometry = new THREE.BoxGeometry();
