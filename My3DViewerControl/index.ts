@@ -242,7 +242,65 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
                       
                       pospointer -= parseFloat(layerThk);
                   });
-      
+
+
+                    // 绘制从第一层到第三层的圆柱体
+                    const cylinderGeometry1 = new THREE.CylinderGeometry(0.5, 0.5, 2, 32);
+                    const cylinderMaterial1 = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+                    const cylinder1 = new THREE.Mesh(cylinderGeometry1, cylinderMaterial1);
+                    cylinder1.position.set(0, 1, 0); // 设置位置在第一层中间
+                    this._scene.add(cylinder1);
+
+                    // 绘制从最后一层到第二层的圆柱体
+                    const cylinderGeometry2 = new THREE.CylinderGeometry(0.5, 0.5, 2, 32);
+                    const cylinderMaterial2 = new THREE.MeshStandardMaterial({ color: 0x0000ff });
+                    const cylinder2 = new THREE.Mesh(cylinderGeometry2, cylinderMaterial2);
+                    cylinder2.position.set(0, 2, 0); // 设置位置在第二层中间
+                    cylinder2.rotation.x = Math.PI / 2; // 旋转以使其垂直
+                    this._scene.add(cylinder2);
+
+                    // 绘制坐标轴
+                    const axesHelper = new THREE.AxesHelper(5); // 参数为坐标轴的长度
+                    this._scene.add(axesHelper);
+                    {
+                        // 添加x文本
+                        const textGeometry = new TextGeometry(`X`, {
+                            font: font,
+                            size: 1,
+                            height: 0.02,
+                        });
+                        const textMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+                        const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+                        textMesh.position.set(5, 0, 0);
+                        this._scene.add(textMesh);
+                    }
+                    {
+                        // 添加y文本
+                        const textGeometry = new TextGeometry(`Y`, {
+                            font: font,
+                            size: 1,
+                            height: 0.02,
+                        });
+                        const textMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+                        const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+                        textMesh.position.set(0, 5, 0);
+                        this._scene.add(textMesh);
+                    }                    
+                    {
+                        // 添加z文本
+                        const textGeometry = new TextGeometry(`Z`, {
+                            font: font,
+                            size: 1,
+                            height: 0.02,
+                        });
+                        const textMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+                        const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+                        textMesh.position.set(0, 0, 5);
+                        this._scene.add(textMesh);
+                    }
+
+                    
+                
                   // test
                   const istest = false;
                   if(istest)
