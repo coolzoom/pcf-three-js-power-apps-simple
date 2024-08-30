@@ -193,7 +193,7 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
               // 加载字体
               const fontLoader = new FontLoader();
               fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
-                  let pospointer = 2;
+                  let pospointer = 0;
                   layersInfo.forEach((layerStr, index) => {
                       // 将每个元素按逗号分割
                       const [layerName, layerType, layerThk] = layerStr.split(',');
@@ -209,21 +209,21 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
                       });
       
                       const pcbLayer = new THREE.Mesh(geometry, material);
-                      pcbLayer.position.set(0,pospointer,0); // 设置每层的位置
+                      pcbLayer.position.set(0,pospointer-parseFloat(layerThk)/2,0); // 设置每层的位置
                       this._scene.add(pcbLayer);
       
                        // 创建边框
                        const edges = new THREE.EdgesGeometry(geometry);
                        const edgeMaterial = new THREE.LineBasicMaterial({ color: 0x000000 }); // 黑色边框
                        const edgeLines = new THREE.LineSegments(edges, edgeMaterial);
-                       edgeLines.position.set(0,pospointer,0); // 设置每层的位置
+                       edgeLines.position.set(0,pospointer-parseFloat(layerThk)/2,0); // 设置每层的位置
                        this._scene.add(edgeLines);
       
                       // 添加引线
                       // 添加横线指向每层中心
                       const points = [];
-                      points.push(new THREE.Vector3(layerWidth / 2, pospointer, layerHeight / 2)); // 起点
-                      points.push(new THREE.Vector3(layerWidth, pospointer, layerHeight / 2)); // 终点
+                      points.push(new THREE.Vector3(layerWidth / 2, pospointer-parseFloat(layerThk)/2, layerHeight / 2)); // 起点
+                      points.push(new THREE.Vector3(layerWidth, pospointer-parseFloat(layerThk)/2, layerHeight / 2)); // 终点
                       const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
                       const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
                       const line = new THREE.Line(lineGeometry, lineMaterial);
@@ -237,7 +237,7 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
                       });
                       const textMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
                       const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-                      textMesh.position.set(layerWidth / 2 + 0.7, pospointer, layerHeight / 2);
+                      textMesh.position.set(layerWidth / 2 + 0.7, pospointer-parseFloat(layerThk)/2, layerHeight / 2);
                       this._scene.add(textMesh);
                       
                       pospointer -= parseFloat(layerThk);
