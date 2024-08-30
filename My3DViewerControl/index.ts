@@ -194,7 +194,7 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
               const fontLoader = new FontLoader();
               fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
                   let pospointer = 2;
-                  layersInfo.forEach((layerStr, insdex) => {
+                  layersInfo.forEach((layerStr, index) => {
                       // 将每个元素按逗号分割
                       const [layerName, layerType, layerThk] = layerStr.split(',');
       
@@ -209,14 +209,14 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
                       });
       
                       const pcbLayer = new THREE.Mesh(geometry, material);
-                      pcbLayer.position.y = pospointer; // 设置每层的位置
+                      pcbLayer.position.set(0,pospointer,0); // 设置每层的位置
                       this._scene.add(pcbLayer);
       
                        // 创建边框
                        const edges = new THREE.EdgesGeometry(geometry);
                        const edgeMaterial = new THREE.LineBasicMaterial({ color: 0x000000 }); // 黑色边框
                        const edgeLines = new THREE.LineSegments(edges, edgeMaterial);
-                       edgeLines.position.y = pospointer; // 设置每层的位置
+                       edgeLines.position.set(0,pospointer,0); // 设置每层的位置
                        this._scene.add(edgeLines);
       
                       // 添加引线
