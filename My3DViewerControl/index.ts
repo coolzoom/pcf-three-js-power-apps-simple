@@ -70,12 +70,12 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
          this._scene.add(plane);
  
          // 添加环境光
-         const ambientLight = new THREE.AmbientLight(0xffffff, 2);
+         const ambientLight = new THREE.AmbientLight(0xffffff, 10);
          this._scene.add(ambientLight);
          
          // Add a directional light
-         const light = new THREE.DirectionalLight(0xffffff, 10);
-         light.position.set(5, 5, 0).normalize(); // 增加光源的强度和位置
+         const light = new THREE.DirectionalLight(0xffffff, 20);
+         light.position.set(-5, 5, -5).normalize(); // 增加光源的强度和位置
          light.castShadow = true; // Enable shadow casting by the light
          light.shadow.mapSize.width = 1024;
          light.shadow.mapSize.height = 1024;
@@ -205,7 +205,7 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
                           color: getRandomColor(), 
                           metalness: 0.8, // 设置金属度
                           roughness: 0.1, // 设置粗糙度
-                          opacity: 1, 
+                          opacity: 0.8, 
                           transparent: true 
                       });
       
@@ -250,7 +250,7 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
 
                     // 绘制从第一层到第三层的圆柱体
                     const cylinderGeometry1 = new THREE.CylinderGeometry(0.2, 0.2, 1, 32);
-                    const cylinderMaterial1 = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+                    const cylinderMaterial1 = new THREE.MeshStandardMaterial({ color: 0xff0000,transparent: true, opacity:0.2 });
                     const cylinder1 = new THREE.Mesh(cylinderGeometry1, cylinderMaterial1);
                     cylinder1.position.set(0, -0.1, layerWidth / 2); // 设置位置在第一层中间
                     this._scene.add(cylinder1);
