@@ -249,19 +249,19 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
 
 
                     // 绘制从第一层到第三层的圆柱体
-                    const cylinderGeometry1 = new THREE.CylinderGeometry(0.5, 0.5, 2, 32);
+                    const cylinderGeometry1 = new THREE.CylinderGeometry(0.2, 0.2, 1, 32);
                     const cylinderMaterial1 = new THREE.MeshStandardMaterial({ color: 0xff0000 });
                     const cylinder1 = new THREE.Mesh(cylinderGeometry1, cylinderMaterial1);
-                    cylinder1.position.set(0, 1, 0); // 设置位置在第一层中间
+                    cylinder1.position.set(0, -0.1, layerWidth / 2); // 设置位置在第一层中间
                     this._scene.add(cylinder1);
 
-                    // 绘制从最后一层到第二层的圆柱体
-                    const cylinderGeometry2 = new THREE.CylinderGeometry(0.5, 0.5, 2, 32);
-                    const cylinderMaterial2 = new THREE.MeshStandardMaterial({ color: 0x0000ff });
-                    const cylinder2 = new THREE.Mesh(cylinderGeometry2, cylinderMaterial2);
-                    cylinder2.position.set(0, 2, 0); // 设置位置在第二层中间
-                    cylinder2.rotation.x = Math.PI / 2; // 旋转以使其垂直
-                    this._scene.add(cylinder2);
+                    // // 绘制从最后一层到第二层的圆柱体
+                    // const cylinderGeometry2 = new THREE.CylinderGeometry(0.5, 0.5, 2, 32);
+                    // const cylinderMaterial2 = new THREE.MeshStandardMaterial({ color: 0x0000ff });
+                    // const cylinder2 = new THREE.Mesh(cylinderGeometry2, cylinderMaterial2);
+                    // cylinder2.position.set(0, 2, 0); // 设置位置在第二层中间
+                    // cylinder2.rotation.x = Math.PI / 2; // 旋转以使其垂直
+                    // this._scene.add(cylinder2);
 
                     // 绘制坐标轴
                     const axesHelper = new THREE.AxesHelper(5); // 参数为坐标轴的长度
