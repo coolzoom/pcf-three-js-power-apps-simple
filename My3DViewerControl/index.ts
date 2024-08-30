@@ -63,10 +63,9 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
          const planeMaterial = new THREE.ShadowMaterial({ opacity: 0.5 });
          const plane = new THREE.Mesh(planeGeometry, planeMaterial);
          plane.rotation.x = -Math.PI / 2;
-         plane.position.y = -1;
+         plane.position.y = -5;
          plane.receiveShadow = true; // Enable receiving shadows
          this._scene.add(plane);
- 
  
          // 添加环境光
          const ambientLight = new THREE.AmbientLight(0xffffff, 2);
@@ -74,10 +73,10 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
          
          // Add a directional light
          const light = new THREE.DirectionalLight(0xffffff, 10);
-         light.position.set(0, 0, 10).normalize(); // 增加光源的强度和位置
-         // light.castShadow = true; // Enable shadow casting by the light
-         // light.shadow.mapSize.width = 1024;
-         // light.shadow.mapSize.height = 1024;
+         light.position.set(5, 5, 0).normalize(); // 增加光源的强度和位置
+         light.castShadow = true; // Enable shadow casting by the light
+         light.shadow.mapSize.width = 1024;
+         light.shadow.mapSize.height = 1024;
          this._scene.add(light);
  
          // Initialize raycaster and mouse vector
@@ -210,6 +209,7 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
       
                       const pcbLayer = new THREE.Mesh(geometry, material);
                       pcbLayer.position.set(0,pospointer-parseFloat(layerThk)/2,0); // 设置每层的位置
+                      pcbLayer.castShadow = true;
                       this._scene.add(pcbLayer);
       
                        // 创建边框
@@ -227,6 +227,7 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
                       const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
                       const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
                       const line = new THREE.Line(lineGeometry, lineMaterial);
+                      line.castShadow = true;
                       this._scene.add(line);
       
                       // 添加文本
@@ -238,6 +239,7 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
                       const textMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
                       const textMesh = new THREE.Mesh(textGeometry, textMaterial);
                       textMesh.position.set(layerWidth / 2 + 0.7, pospointer-parseFloat(layerThk)/2, layerHeight / 2);
+                      textMesh.castShadow = true;
                       this._scene.add(textMesh);
                       
                       pospointer -= parseFloat(layerThk);
