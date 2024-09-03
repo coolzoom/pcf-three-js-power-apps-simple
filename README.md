@@ -47,5 +47,6 @@ powerapps
 solution->import solution 完成后即可看到
 
 # 使用
+老版本 powerapp-》insert-》custom
+新版本，在左边点加号Insert，选search下面小图标get more component -》 code
 
-powerapp-》insert-》custom
