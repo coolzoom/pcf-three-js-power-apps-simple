@@ -62,3 +62,4 @@ solution->import solution 完成后即可看到
 pac pcf push --publisher-prefix msl
 
 即可，不需要导入solution
+powerapp刷新编辑窗口，会提示有控件需要更新
