@@ -86,7 +86,7 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
          this._mouse = new THREE.Vector2();
  
          // Add event listener for mouse click
-         this._container.addEventListener('click', this.onMouseClick.bind(this), false);
+         // this._container.addEventListener('click', this.onMouseClick.bind(this), false);
  
          // 鼠标控制
          const controls = new OrbitControls(this._camera, this._renderer.domElement);
@@ -101,7 +101,7 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
  
          controls.enablePan = true; // Set to false to disable panning (ie vertical and horizontal translations)
  
-         controls.enableDamping = true; // Set to false to disable damping (ie inertia)
+         controls.enableDamping = false; // Set to false to disable damping (ie inertia)
          controls.dampingFactor = 0.25;
  
          const animate = () => {
@@ -249,11 +249,11 @@ export class My3DViewerControl implements ComponentFramework.StandardControl<IIn
 
 
                     // 绘制从第一层到第三层的圆柱体
-                    const cylinderGeometry1 = new THREE.CylinderGeometry(0.2, 0.2, 1, 32);
-                    const cylinderMaterial1 = new THREE.MeshStandardMaterial({ color: 0xff0000,transparent: true, opacity:0.2 });
-                    const cylinder1 = new THREE.Mesh(cylinderGeometry1, cylinderMaterial1);
-                    cylinder1.position.set(0, -0.1, layerWidth / 2); // 设置位置在第一层中间
-                    this._scene.add(cylinder1);
+                    // const cylinderGeometry1 = new THREE.CylinderGeometry(0.2, 0.2, 1, 32);
+                    // const cylinderMaterial1 = new THREE.MeshStandardMaterial({ color: 0xff0000,transparent: true, opacity:0.2 });
+                    // const cylinder1 = new THREE.Mesh(cylinderGeometry1, cylinderMaterial1);
+                    // cylinder1.position.set(0, -0.1, layerWidth / 2); // 设置位置在第一层中间
+                    // this._scene.add(cylinder1);
 
                     // // 绘制从最后一层到第二层的圆柱体
                     // const cylinderGeometry2 = new THREE.CylinderGeometry(0.5, 0.5, 2, 32);
