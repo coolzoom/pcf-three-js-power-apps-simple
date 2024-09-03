@@ -27,13 +27,13 @@ Power Platform Tools
 pac pcf push --publisher-prefix msl
 
 
-# 自己创建solution
+# 自己创建solution 非必须
 https://learn.microsoft.com/en-us/training/modules/build-power-apps-component/package-code-component
 
 mkdir Solution
 cd Solution
 pac solution init --publisher-name mslearn --publisher-prefix msl
-pac solution add-reference Z:\Documents\GitHub\pcf-three-js-power-apps-simple
+pac solution add-reference --path Z:\Documents\GitHub\pcf-three-js-power-apps-simple
 msbuild /t:build /restore
 msbuild /p:configureation=Release
 
