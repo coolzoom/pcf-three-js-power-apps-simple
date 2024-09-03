@@ -39,6 +39,8 @@ pac solution add-reference --path Z:\Documents\GitHub\pcf-three-js-power-apps-si
 msbuild /t:build /restore
 msbuild /p:configureation=Release
 
+或者dotnet build
+
 enable powerapps comp framework
 https://admin.powerplatform.microsoft.com/
 environment，settings，product，feaures, Power Apps component framework for canvas apps
