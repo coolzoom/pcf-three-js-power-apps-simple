@@ -23,7 +23,7 @@ code 安装
 Power Platform Tools
 进去左边选add auth profile
 
-- 使用临时solution发布
+- 使用临时solution发布， having issue with mac, need to run on windows
 pac pcf push --publisher-prefix msl
 
 
