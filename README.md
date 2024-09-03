@@ -52,9 +52,12 @@ solution->import solution 完成后即可看到
 老版本 powerapp-》insert-》custom
 新版本，在左边点加号Insert，选search下面小图标get more component -》 code
 
+app-onstart
+Set(XSectionString,"")
+My3DViewerControl1.stackupstring 设置为XSectionString
 
-测试控件更新
-修改后重新导入，重新删除和加入控件均还是第一次的样子。
+按钮更新：
+Set(XSectionString, "Layer1,typeA,0.2|Layer2,typeB,0.35|Layer3,typeC,0.15|Layer4,typeA,0.1|Layer5,typeB,0.2|Layer6,typeC,0.15");
 
 # 更新
 
